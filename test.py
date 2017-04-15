@@ -18,6 +18,9 @@ class App(object):
         self.col2 = Label(master, text="col2", borderwidth=2)
         self.col2.grid(row=2, sticky=W)
 
+        self.sql = Label(master, text="sql", borderwidth=2)
+        self.sql.grid(row=3, sticky=W)
+
         self.col1Entry = Entry(master, textvariable=self.col1Content)
         self.col1Entry.grid(row=1, column=1, columnspan=2)
         self.col1Entry.focus_set()
@@ -25,20 +28,20 @@ class App(object):
         self.col2Entry = Entry(master, textvariable=self.col2Content)
         self.col2Entry.grid(row=2, column=1, columnspan=2)
 
-        self.sqlEntry = Entry(master, textvariable=self.sqlContent)
-        self.sqlEntry.grid(row=1, column=1, columnspan=2)
+        self.sqlEntry = Entry(master, textvariable=self.sqlContent, state='readonly')
+        self.sqlEntry.grid(row=3, column=1, columnspan=2)
 
         self.searchButton = Button(master, text='search', borderwidth=2, command=self.searchDB)
-        self.searchButton.grid(row=3, column=2)
+        self.searchButton.grid(row=4, column=2)
 
 
     def searchDB(self, *args):
         db = MySQLdb.connect("localhost","root","12345678","labdb")
         cursor = db.cursor()
         col1, col2 = int(self.col1Content.get()), int(self.col2Content.get())
-        sql = "select * from testtable where testCol1=%d and testCol2=%d" % (col1, col2);
+        sql = "SELECT * FROM TESTTABLE WHERE testCol1=%d AND testCol2=%d" % (col1, col2);
         print sql
-        
+        self.sqlContent.set(sql)
         try:
             cursor.execute(sql)
             # db.commit()
