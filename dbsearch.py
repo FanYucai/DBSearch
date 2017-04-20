@@ -1,7 +1,7 @@
-#! usr/bin/python #coding=utf-8
+#!usr/bin/python #coding=utf-8
 import MySQLdb
-import string
 from Tkinter import *
+
 
 class App(object):
     def __init__(self, master):
@@ -10,7 +10,6 @@ class App(object):
         self.sqlContent = StringVar('')
         # self.col1Content.set('')
         # self.col2Content.set('')
-
         self.master = master
         self.col1 = Label(master, text="col1", borderwidth=2)
         self.col1.grid(row=1, sticky=W)
@@ -28,18 +27,20 @@ class App(object):
         self.col2Entry = Entry(master, textvariable=self.col2Content)
         self.col2Entry.grid(row=2, column=1, columnspan=2)
 
-        self.sqlEntry = Entry(master, textvariable=self.sqlContent, state='readonly')
+        self.sqlEntry = Entry(
+            master, textvariable=self.sqlContent, state='readonly')
         self.sqlEntry.grid(row=3, column=1, columnspan=2)
 
-        self.searchButton = Button(master, text='search', borderwidth=2, command=self.searchDB)
+        self.searchButton = Button(
+            master, text='earch', borderwidth=2, command=self.searchDB)
         self.searchButton.grid(row=4, column=2)
 
-
     def searchDB(self, *args):
-        db = MySQLdb.connect("localhost","root","12345678","labdb")
+        db = MySQLdb.connect("localhost", "root", "12345678", "labdb")
         cursor = db.cursor()
         col1, col2 = int(self.col1Content.get()), int(self.col2Content.get())
-        sql = "SELECT * FROM TESTTABLE WHERE testCol1=%d AND testCol2=%d" % (col1, col2);
+        sql = "SELECT * FROM TESTTABLE WHERE testCol1=%d AND testCol2=%d" % (
+            col1, col2)
         print sql
         self.sqlContent.set(sql)
         try:
@@ -51,7 +52,8 @@ class App(object):
                 resCol1 = row[0]
                 resCol2 = row[1]
                 print "row[1] = %d, row[2] = %d\n" % (resCol1, resCol2)
-                # print self.col1Content.get(), self.col2Content.get(), "hahaha"
+                # print self.col1Content.get(), self.col2Content.get(),
+                # "hahaha"
         except:
             print "Error: unable to fecth data"
 
