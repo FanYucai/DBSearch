@@ -4,7 +4,7 @@ import MySQLdb
 import wx
 class MyFrame(wx.Frame):
     def __init__(self):
-        wx.Frame.__init__(self, None, -1, "My Frame", size = (400, 400))
+        wx.Frame.__init__(self, None, -1, "My Frame", size = (600, 400))
         panel = wx.Panel(self, -1)
         # panel.Bind(wx.EVT_MOTION, self.OnMove)
         wx.StaticText(panel, -1, u"学号", pos = (10, 10))
@@ -26,9 +26,9 @@ class MyFrame(wx.Frame):
         self.Sclass = wx.TextCtrl(panel, -1, "", pos = (250, 10))
         self.Sdept = wx.TextCtrl(panel, -1, "", pos = (250, 40))
         self.Saddr = wx.TextCtrl(panel, -1, "", pos = (250, 70))
-        self.ResDisplay = wx.TextCtrl(panel, -1, "", pos = (60, 200), size=(300, 50))
+        self.ResDisplay = wx.TextCtrl(panel, -1, "", pos = (60, 200), size=(550, 100), style=wx.TE_MULTILINE)
 
-        self.sqlText = wx.TextCtrl(panel, -1, "", pos = (60, 140), size=(300, 50))
+        self.sqlText = wx.TextCtrl(panel, -1, "", pos = (60, 140), size=(550, 50))
 
         self.buttonSearch = wx.Button(panel, label="Search", pos=(270, 100))
         self.buttonSearch.Bind(wx.EVT_BUTTON, self.searchSql)
