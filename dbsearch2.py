@@ -126,9 +126,10 @@ class MyFrame(wx.Frame):
                 resDisplayValue += resSid+resSage+resSsex+resSdept+resSname+resSaddr+resSclass
                 # print resDisplayValue
             self.ResDisplay.SetValue(resDisplayValue)
+
         except:
             print "Error: unable to fecth data"
-
+            self.ResDisplay.SetValue("Error: unable to fetch data")
         db.close()
 
 if __name__ == '__main__':
