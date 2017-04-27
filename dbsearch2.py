@@ -1,5 +1,5 @@
-#!/usr/bin/python  
-# -*- coding:utf-8 -*- 
+#!/usr/bin/python
+# -*- coding:utf-8 -*-
 import MySQLdb
 import wx
 class MyFrame(wx.Frame):
@@ -11,14 +11,14 @@ class MyFrame(wx.Frame):
         wx.StaticText(panel, -1, u"姓名", pos = (10, 40))
         wx.StaticText(panel, -1, u"年龄", pos = (10, 70))
         wx.StaticText(panel, -1, u"性别", pos = (10, 100))
-        
+
         wx.StaticText(panel, -1, u"班级", pos = (200, 10))
         wx.StaticText(panel, -1, u"学院", pos = (200, 40))
         wx.StaticText(panel, -1, u"地址", pos = (200, 70))
-        
+
         # wx.StaticText(panelSname, -1, "Sname", pos = (13, 12))
         # wx.StaticText(panelSage, -1, "Sage", pos = (15, 12))
-        self.Ssex = wx.ComboBox(panel, -1, "", pos = (60, 100), size=(102,27), choices = [u"男", u"女"]) 
+        self.Ssex = wx.ComboBox(panel, -1, "", pos = (60, 100), size=(102,27), choices = [u"男", u"女", u"-"])
         # self.rbox = wx.RadioBox(panel, label = u"性别", pos = (60,100), choices = [u"男", u"女"] , majorDimension = 1, style = wx.RA_SPECIFY_ROWS)
         self.Sid = wx.TextCtrl(panel, -1, "", pos = (60, 10))
         self.Sname = wx.TextCtrl(panel, -1, "", pos = (60, 40))
@@ -30,9 +30,9 @@ class MyFrame(wx.Frame):
 
         self.sqlText = wx.TextCtrl(panel, -1, "", pos = (60, 140), size=(550, 50))
 
-        self.buttonSearch = wx.Button(panel, label="Search", pos=(270, 100))
+        self.buttonSearch = wx.Button(panel, label=u"查询", pos=(270, 100))
         self.buttonSearch.Bind(wx.EVT_BUTTON, self.searchSql)
-        
+
         # sizer = wx.BoxSizer(wx.VERTICAL)
         # sizer.Add(self.Sid,flag=wx.EXPAND)
         # sizer.Add(self.Sname,flag=wx.EXPAND)
@@ -53,14 +53,14 @@ class MyFrame(wx.Frame):
         #display:
         sqlDisplay = "SELECT * FROM Student WHERE"
 
-        self.ValSid     = self.Sid.GetValue() 
-        self.ValSname   = self.Sname.GetValue() 
+        self.ValSid     = self.Sid.GetValue()
+        self.ValSname   = self.Sname.GetValue()
         self.ValSage    = self.Sage.GetValue()
-        self.ValSclass  = self.Sclass.GetValue() 
-        self.ValSdept   = self.Sdept.GetValue() 
+        self.ValSclass  = self.Sclass.GetValue()
+        self.ValSdept   = self.Sdept.GetValue()
         self.ValSaddr   = self.Saddr.GetValue()
         self.ValSsex    = self.Ssex.GetValue()
-        
+
         hasPreAnd = 0
         if len(self.ValSid) != 0 :
             sqlDisplay += " Sid=" + "'" + self.ValSid + "'"
@@ -70,7 +70,7 @@ class MyFrame(wx.Frame):
                 sqlDisplay += " AND"
             sqlDisplay += " Sname=" + "'" + self.ValSname + "'"
             hasPreAnd = 1
-        if len(self.ValSage) != 0 :            
+        if len(self.ValSage) != 0 :
             if hasPreAnd == 1:
                 sqlDisplay += " AND"
             sqlDisplay += " Sage=" + "'" + self.ValSage + "'"
@@ -87,19 +87,23 @@ class MyFrame(wx.Frame):
             hasPreAnd = 1
         if len(self.ValSaddr) != 0 :
             if hasPreAnd == 1:
-                sqlDisplay += " AND"            
+                sqlDisplay += " AND"
             sqlDisplay += " Saddr=" + "'" + self.ValSaddr + "'"
             hasPreAnd = 1
-        if len(self.ValSsex) != 0 : 
+        if self.ValSsex != '-':
             if hasPreAnd == 1:
-                sqlDisplay += " AND"           
+                sqlDisplay += " AND"
             sqlDisplay += " Ssex=" + "'" + self.ValSsex + "'"
+            hasPreAnd = 1
 
-        sqlDisplay += ';'
+        if hasPreAnd == 0:
+            sqlDisplay = u"请至少指定一个查询条件"
+        else:
+            sqlDisplay += ';'
 
         self.sqlText.SetValue(sqlDisplay)
         #search in MySQL:
-       
+
         db = MySQLdb.connect("localhost", "root", "12345678", "labdb", charset = 'utf8')
         cursor = db.cursor()
         sql = sqlDisplay
