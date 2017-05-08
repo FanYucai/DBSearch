@@ -6,7 +6,7 @@ import wx
 
 class MyFrame(wx.Frame):
     def __init__(self):
-        wx.Frame.__init__(self, None, -1, "My Frame", size=(670, 400))
+        wx.Frame.__init__(self, None, -1, "My Frame", size=(670, 500))
         panel = wx.Panel(self, -1)
         # panel.Bind(wx.EVT_MOTION, self.OnMove)
         wx.StaticText(panel, -1, u"学号", pos=(10, 10))
@@ -28,7 +28,7 @@ class MyFrame(wx.Frame):
         self.Sclass = wx.TextCtrl(panel, -1, "", pos=(250, 10))
         self.Sdept = wx.TextCtrl(panel, -1, "", pos=(250, 40))
         self.Saddr = wx.TextCtrl(panel, -1, "", pos=(250, 70))
-        self.ResDisplay = wx.TextCtrl(panel, -1, "", pos=(60, 200), size=(550, 100), style=wx.TE_MULTILINE)
+        self.ResDisplay = wx.TextCtrl(panel, -1, "", pos=(60, 200), size=(550, 200), style=wx.TE_MULTILINE)
 
         self.sqlText = wx.TextCtrl(panel, -1, "", pos=(60, 140), size=(550, 50))
 
@@ -64,38 +64,66 @@ class MyFrame(wx.Frame):
         self.ValSsex = self.Ssex.GetValue()
 
         hasPreAnd = 0
+
         if len(self.ValSid) != 0:
-            sqlDisplay += " Sid=" + "'" + self.ValSid + "'"
+            if '%' in self.ValSid:
+                sqlDisplay += " Sid like " + "'" + self.ValSid + "'"
+            else:
+                sqlDisplay += " Sid=" + "'" + self.ValSid + "'"
             hasPreAnd = 1
+
         if len(self.ValSname) != 0:
             if hasPreAnd == 1:
                 sqlDisplay += " AND"
-            sqlDisplay += " Sname=" + "'" + self.ValSname + "'"
+            if '%' in self.ValSname:
+                sqlDisplay += " Sname like " + "'" + self.ValSname + "'"
+            else:
+                sqlDisplay += " Sname=" + "'" + self.ValSname + "'"
             hasPreAnd = 1
+
         if len(self.ValSage) != 0:
             if hasPreAnd == 1:
                 sqlDisplay += " AND"
-            sqlDisplay += " Sage=" + "'" + self.ValSage + "'"
+            if '%' in self.ValSage:
+                sqlDisplay += " Sage like " + "'" + self.ValSage + "'"            
+            else:
+                sqlDisplay += " Sage=" + "'" + self.ValSage + "'"
             hasPreAnd = 1
+
         if len(self.ValSclass) != 0:
             if hasPreAnd == 1:
                 sqlDisplay += " AND"
-            sqlDisplay += " Sclass=" + "'" + self.ValSclass + "'"
+            if '%' in self.ValSclass:
+                sqlDisplay += " Sclass like " + "'" + self.ValSclass + "'"            
+            else:
+                sqlDisplay += " Sclass=" + "'" + self.ValSclass + "'"
             hasPreAnd = 1
+
         if len(self.ValSdept) != 0:
             if hasPreAnd == 1:
                 sqlDisplay += " AND"
-            sqlDisplay += " Sdept=" + "'" + self.ValSdept + "'"
+            if '%' in self.ValSdept:
+                sqlDisplay += " Sdept like " + "'" + self.ValSdept + "'"            
+            else:
+                sqlDisplay += " Sdept=" + "'" + self.ValSdept + "'"
             hasPreAnd = 1
+
         if len(self.ValSaddr) != 0:
             if hasPreAnd == 1:
                 sqlDisplay += " AND"
-            sqlDisplay += " Saddr=" + "'" + self.ValSaddr + "'"
+            if '%' in self.ValSaddr:
+                sqlDisplay += " Saddr like " + "'" + self.ValSaddr + "'"            
+            else:
+                sqlDisplay += " Saddr=" + "'" + self.ValSaddr + "'"
             hasPreAnd = 1
+
         if self.ValSsex != '-':
             if hasPreAnd == 1:
                 sqlDisplay += " AND"
-            sqlDisplay += " Ssex=" + "'" + self.ValSsex + "'"
+            if '%' in self.ValSsex:
+                sqlDisplay += " Ssex like " + "'" + self.ValSsex + "'"            
+            else:
+                sqlDisplay += " Ssex=" + "'" + self.ValSsex + "'"
             hasPreAnd = 1
 
         if hasPreAnd == 0:
@@ -109,6 +137,7 @@ class MyFrame(wx.Frame):
         db = MySQLdb.connect("localhost", "root", "12345678", "labdb", charset='utf8')
         cursor = db.cursor()
         sql = sqlDisplay
+        # sql = "select * from student where Saddr like '吉林%';"
         # sql = sqlDisplay.encode('utf8')
         print sql
         try:
