@@ -44,8 +44,7 @@ class MyFrame(wx.Frame):
         self.Sdept = wx.TextCtrl(panel, -1, "", pos=(250, 40))
         self.Saddr = wx.TextCtrl(panel, -1, "", pos=(250, 70))
         # self.ResDisplay = wx.TextCtrl(panel, -1, "", pos=(60, 200), size=(550, 200), style=wx.TE_MULTILINE)
-
-        self.sqlText = wx.TextCtrl(panel, -1, "", pos=(60, 140), size=(553, 50))
+        self.sqlText = wx.TextCtrl(panel, -1, "", pos=(60, 140), size=(553, 50), style=wx.TE_READONLY)
         self.buttonSearch = wx.Button(panel, label=u"查询", pos=(250, 100), size=(100, 27))
         self.buttonSearch.Bind(wx.EVT_BUTTON, self.searchSql)
 
@@ -54,7 +53,7 @@ class MyFrame(wx.Frame):
         self.Sid.SetValue("%s, %s" % (pos.x, pos.y))
 
     def searchSql(self, event):
-        # display:
+        # display sql text:
         sqlDisplay = "SELECT * FROM Student WHERE"
 
         self.ValSid = self.Sid.GetValue()
@@ -140,25 +139,30 @@ class MyFrame(wx.Frame):
         self.sqlText.SetValue(sqlDisplay)
         
         ################# search in MySQL ################
-        
+         
         db = MySQLdb.connect("localhost", "root", "12345678", "labdb", charset='utf8')
         cursor = db.cursor()
         sql = sqlDisplay
         # sql = "select * from student where Saddr like '吉林%';"
         # sql = sqlDisplay.encode('utf8')
-        print sql
+        
         try:
             cursor.execute(sql)
             results = cursor.fetchall()
-            # print ("共%d条查询结果\n") % len(results)
+            # delete previous infomation
+            for i in range(self.grid.GetNumberRows()):
+                self.grid.DeleteRows(0)
+            # append row for the grid to display result
             for resi in range(len(results)):
                 self.grid.AppendRows()
                 for resj in range(7):
                     self.grid.SetCellValue(resi, resj, unicode(results[resi][resj]))
+            # set readonly attr for grid
+            self.grid.EnableEditing(False)
 
         except:
             print "Error: unable to fecth data"
-            # self.ResDisplay.SetValue("Error: unable to fetch data")
+
         db.close()
 
         ################# search in MySQL ################
