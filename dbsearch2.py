@@ -2,50 +2,52 @@
 # -*- coding:utf-8 -*-
 import MySQLdb
 import wx
-
+import wx.grid as gridlib
+              
+# colLabels = ["Sid", "Sname", "Sage", "Ssex", "Sclass", "Sdept", "Saddr"]
+colLabels = ["Sid", "Sage", "Ssex", "Sdept", "Sname", "Saddr", "Sclass"]
 
 class MyFrame(wx.Frame):
     def __init__(self):
-        wx.Frame.__init__(self, None, -1, "My Frame", size=(670, 500))
+        wx.Frame.__init__(self, None, -1, "My Frame", size=(670, 600))
         panel = wx.Panel(self, -1)
-        # panel.Bind(wx.EVT_MOTION, self.OnMove)
+
+        ################################ gird ################################
+        self.grid = gridlib.Grid(panel, -1, pos=(60, 200), size=(553, 300))
+        self.grid.CreateGrid(0,7)
+        for i in range(7):
+            self.grid.SetColLabelValue(i, colLabels[i])
+            self.grid.SetColSize(i, 79)
+        self.grid.SetColSize(0, 89)
+        self.grid.SetColSize(1, 56)
+        self.grid.SetColSize(2, 56)
+        self.grid.SetColSize(3, 56)
+        self.grid.SetColSize(5, 140)
+        self.grid.HideRowLabels()
+        ################################ gird ################################
+
         wx.StaticText(panel, -1, u"学号", pos=(10, 10))
         wx.StaticText(panel, -1, u"姓名", pos=(10, 40))
-        wx.StaticText(panel, -1, u"年龄", pos=(10, 70))
+        wx.StaticText(panel, -1, u"年龄自", pos=(10, 70))
+        wx.StaticText(panel, -1, u"到", pos=(100, 70))
         wx.StaticText(panel, -1, u"性别", pos=(10, 100))
-
         wx.StaticText(panel, -1, u"班级", pos=(200, 10))
         wx.StaticText(panel, -1, u"学院", pos=(200, 40))
         wx.StaticText(panel, -1, u"地址", pos=(200, 70))
 
-        # wx.StaticText(panelSname, -1, "Sname", pos=(13, 12))
-        # wx.StaticText(panelSage, -1, "Sage", pos=(15, 12))
-        self.Ssex = wx.ComboBox(panel, -1, "", pos=(60, 100), size=(102, 27), choices=[u"-", u"男", u"女"])
-        # self.rbox = wx.RadioBox(panel, label = u"性别", pos=(60,100), choices = [u"男", u"女"] , majorDimension = 1, style = wx.RA_SPECIFY_ROWS)
+        self.Ssex = wx.ComboBox(panel, -1, "", pos=(60, 100), size=(104, 27), choices=[u"-", u"男", u"女"])
         self.Sid = wx.TextCtrl(panel, -1, "", pos=(60, 10))
         self.Sname = wx.TextCtrl(panel, -1, "", pos=(60, 40))
-        self.Sage = wx.TextCtrl(panel, -1, "", pos=(60, 70))
+        self.Sage1 = wx.TextCtrl(panel, -1, "", pos=(60, 70), size=(36, 21))
+        self.Sage2 = wx.TextCtrl(panel, -1, "", pos=(124, 70), size=(36, 21))
         self.Sclass = wx.TextCtrl(panel, -1, "", pos=(250, 10))
         self.Sdept = wx.TextCtrl(panel, -1, "", pos=(250, 40))
         self.Saddr = wx.TextCtrl(panel, -1, "", pos=(250, 70))
-        self.ResDisplay = wx.TextCtrl(panel, -1, "", pos=(60, 200), size=(550, 200), style=wx.TE_MULTILINE)
+        # self.ResDisplay = wx.TextCtrl(panel, -1, "", pos=(60, 200), size=(550, 200), style=wx.TE_MULTILINE)
 
-        self.sqlText = wx.TextCtrl(panel, -1, "", pos=(60, 140), size=(550, 50))
-
-        self.buttonSearch = wx.Button(panel, label=u"查询", pos=(270, 100))
+        self.sqlText = wx.TextCtrl(panel, -1, "", pos=(60, 140), size=(553, 50))
+        self.buttonSearch = wx.Button(panel, label=u"查询", pos=(250, 100), size=(100, 27))
         self.buttonSearch.Bind(wx.EVT_BUTTON, self.searchSql)
-
-        # sizer = wx.BoxSizer(wx.VERTICAL)
-        # sizer.Add(self.Sid,flag=wx.EXPAND)
-        # sizer.Add(self.Sname,flag=wx.EXPAND)
-        # sizer.Add(self.Sage,flag=wx.EXPAND)
-        # sizer.Add(self.Sclass,flag=wx.EXPAND)
-        # sizer.Add(self.Sdept,flag=wx.EXPAND)
-        # sizer.Add(self.Saddr,flag=wx.EXPAND)
-        # sizer.Add(self.sqlText,flag=wx.EXPAND)
-        # sizer.Add(self.ResDisplay,flag=wx.EXPAND)
-        # sizer.Add(self.buttonSearch,flag=wx.EXPAND)
-        # sizer.Add(self.Sname,flag=wx.EXPAND)
 
     def OnMove(self, event):
         pos = event.GetPosition()
@@ -57,7 +59,8 @@ class MyFrame(wx.Frame):
 
         self.ValSid = self.Sid.GetValue()
         self.ValSname = self.Sname.GetValue()
-        self.ValSage = self.Sage.GetValue()
+        self.ValSage1 = self.Sage1.GetValue()
+        self.ValSage2 = self.Sage2.GetValue()
         self.ValSclass = self.Sclass.GetValue()
         self.ValSdept = self.Sdept.GetValue()
         self.ValSaddr = self.Saddr.GetValue()
@@ -81,13 +84,16 @@ class MyFrame(wx.Frame):
                 sqlDisplay += " Sname=" + "'" + self.ValSname + "'"
             hasPreAnd = 1
 
-        if len(self.ValSage) != 0:
+        if len(self.ValSage1) != 0:
             if hasPreAnd == 1:
                 sqlDisplay += " AND"
-            if '%' in self.ValSage:
-                sqlDisplay += " Sage like " + "'" + self.ValSage + "'"            
-            else:
-                sqlDisplay += " Sage=" + "'" + self.ValSage + "'"
+            sqlDisplay += " Sage>=" + self.ValSage1
+            hasPreAnd = 1
+
+        if len(self.ValSage2) != 0:
+            if hasPreAnd == 1:
+                sqlDisplay += " AND"
+            sqlDisplay += " Sage<=" + self.ValSage2
             hasPreAnd = 1
 
         if len(self.ValSclass) != 0:
@@ -132,8 +138,9 @@ class MyFrame(wx.Frame):
             sqlDisplay += ';'
 
         self.sqlText.SetValue(sqlDisplay)
-        # search in MySQL:
-
+        
+        ################# search in MySQL ################
+        
         db = MySQLdb.connect("localhost", "root", "12345678", "labdb", charset='utf8')
         cursor = db.cursor()
         sql = sqlDisplay
@@ -142,29 +149,22 @@ class MyFrame(wx.Frame):
         print sql
         try:
             cursor.execute(sql)
-            # db.commit()
             results = cursor.fetchall()
-            resDisplayValue = ""
-            print ("共%d条查询结果\n") % len(results)
-            for row in results:
-                resSid = row[0] + "\t"
-                resSage = unicode(row[1]) + "\t"
-                resSsex = row[2] + "\t"
-                resSdept = row[3] + "\t"
-                resSname = row[4] + "\t"
-                resSaddr = row[5] + "\t"
-                resSclass = row[6] + "\n"
-                resDisplayValue += resSid + resSage + resSsex + resSdept + resSname + resSaddr + resSclass
-                # print resDisplayValue
-            self.ResDisplay.SetValue(resDisplayValue)
+            # print ("共%d条查询结果\n") % len(results)
+            for resi in range(len(results)):
+                self.grid.AppendRows()
+                for resj in range(7):
+                    self.grid.SetCellValue(resi, resj, unicode(results[resi][resj]))
 
         except:
             print "Error: unable to fecth data"
-            self.ResDisplay.SetValue("Error: unable to fetch data")
+            # self.ResDisplay.SetValue("Error: unable to fetch data")
         db.close()
 
+        ################# search in MySQL ################
+
 if __name__ == '__main__':
-    app = wx.PySimpleApp()
+    app = wx.App()
     frame = MyFrame()
     frame.Show(True)
     app.MainLoop()
