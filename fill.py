@@ -5,7 +5,7 @@ import MySQLdb
 from time import sleep
 from random import choice
 # 打开数据库连接
-db = MySQLdb.connect("localhost", "root", "12345678", "labdb", charset='utf8')
+db = MySQLdb.connect("localhost", "root", "12345678", "dblab", charset='utf8')
 
 # 使用cursor()方法获取操作游标 
 cursor = db.cursor()
@@ -28,10 +28,9 @@ for i in range(30):
 	          '吉林省吉林市', '福建省福州市', '浙江省宁波市', '浙江省绍兴市', '黑龙江省大庆市'])
 	sid = choice(['114', '115', '113', '116']) + \
 			 choice(['031', '262', '032', '035', '042', '102', '042', '026']) + \
-			 choice(['01', '02', '03', '04', '05', '06', '07']) + \
 			 choice(['10', '01', '02', '03', '04', '05', '06', '07', '08', '09', '11', '12', '13', '14', '15', '16', '17', '18', '19'])
 
-	sclass = sid[:8]
+	sclass = sid[-5:]
 
 	# SQL 插入语句
 	sql = "INSERT INTO Student(Sid, Sage, Ssex, Sdept, Sname, Saddr, Sclass) VALUES ('%s', %d, '%s', '%s', '%s', '%s', '%s')" % (sid, sage, ssex, sdept, sname, saddr, sclass)

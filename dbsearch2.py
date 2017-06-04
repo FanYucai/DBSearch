@@ -3,7 +3,6 @@
 import MySQLdb
 import wx
 import wx.grid as gridlib
-              
 # colLabels = ["Sid", "Sname", "Sage", "Ssex", "Sclass", "Sdept", "Saddr"]
 colLabels = ["Sid", "Sage", "Ssex", "Sdept", "Sname", "Saddr", "Sclass"]
 

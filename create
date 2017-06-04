@@ -1,0 +1,55 @@
+CREATE table Student
+(Sid varchar(8) NOT NULL,
+Sname varchar(100) NOT NULL,
+Ssex varchar(2),
+Sage int(10),
+Dname varchar(10),
+Sclass varchar(6),
+PRIMARY KEY (Sid)
+);
+
+
+CREATE table Student
+(Sid varchar(8) NOT NULL,
+Sname varchar(100) NOT NULL,
+Sage int(10),
+Sclass varchar(6),
+Ssex varchar(2),
+Sdept varchar(10),
+Saddr varchar(100),
+
+PRIMARY KEY (Sid)
+);
+
+INSERT INTO Student(Sid, Sage, Ssex, Sdept, Sname, Saddr, Sclass) VALUES ('1140213', 20, '男', '计算机', '樊昱才','江西省九江市', '0213');
+
+
+create table course
+(Cid varchar(8) NOT NULL,
+Cname varchar(100) NOT NULL,
+Chours int(10),
+Ccredit float(3,1),
+Csemester int(10),
+PRIMARY KEY (Cid)
+);
+
+create table SC
+(Sid varchar(8) NOT NULL,
+Cid varchar(8) NOT NULL,
+Score float(2,1)
+);
+
+create table TC
+(Tid varchar(8) NOT NULL,
+Cid varchar(8) NOT NULL
+);
+
+create table Teacher
+(Tid varchar(8) NOT NULL,
+Tname varchar(100) NOT NULL,
+Tage int(10),
+Tsex varchar(2),
+Tdept varchar(10),
+Taddr varchar(100),
+PRIMARY KEY (Tid)
+);
